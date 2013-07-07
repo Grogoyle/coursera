@@ -1,0 +1,794 @@
+Startup Engineering
+Week 1: Course Logistics
+
+Signup: coursera.org/course/startup
+Class: class.coursera.org/startup-001
+Forum: bit.ly/startup-eng-forum
+
+Week 1: Course Logistics
+
+● About Us
+○ Lecturers: Balaji S. Srinivasan (balajis), Vijay Pande (pande)
+○ TA: Alex Chia (alexchia)
+● Motivation
+○ The class we wish we'd had before starting up our co/lab
+● Syllabus
+○ 50% technology + 50% philosophy
+○ Spiritual sequel to Thiel's CS183 (~100% philosophy)
+○ Multiple choice and programming assignments (solo)
+○ Final project
+■ Bitcoin Selfstarter: your own simple crowdfunding site
+■ Partially graded + public recognition
+○ Go to forums/meetups/hackathons; but submit own work
+
+Week 1: Course Logistics
+
+● Web
+○ Primary Course Site (logged-in students)
+https://class.coursera.org/startup-001
+○ Public signup page
+http://coursera.org/course/startup
+○ Convenience site (mobile/logged-out/public)
+http://startup.stanford.edu
+
+● Textbook & Help
+○ All notes online; nothing to buy
+○ To ask for help or report bugs, use the discussion forums
+○ There are ~100,000 students, so email won't work!
+
+About Us
+A brief introduction to your instructors
+
+Instructors
+
+● Balaji S. Srinivasan
+○ Stanford BS/MS/PhD EE, MS ChemE; taught 
+CS & Stats at Stanford before doing startup
+○ Co-founder and CTO of genomics startup 
+Counsyl: won Wall Street Journal's Innovation 
+Award for Medicine, named "Top 10 World 
+Changing Idea" by Scientific American; see also 
+TechCrunch, Stanford Magazine
+○ Scaled Counsyl from Stanford dorm room to  
+60,000 square foot clinical genome center w/ 
+~200 employees, ~3% of US births (robotics 
+video, tech video)
+○ Raised $65M+ in funding from investors 
+including Founders Fund, Felicis Ventures, 
+founders of Paypal/Youtube, Square COO 
+Keith Rabois, Google's Jeff Dean and David 
+Drummond, etc.
+
+Counsyl
+
+Counsyl
+
+Counsyl
+
+Counsyl
+
+Instructors
+
+● Vijay S. Pande
+○ Professor of Chemistry and, by courtesy, of 
+Structural Biology and of Computer Science, and 
+the Director of the Program in Biophysics. 
+○ Princeton/MIT/Berkeley grad; programming 
+since 1982, first company Naughty Dog in 1986 
+(Crash Bandicoot for Sega); at Stanford since 
+1999
+○ Founder and director of the Folding@Home 
+Distributed Computing Project, one of the 
+world's largest supercomputers; massive 
+distributed/parallel computing project
+
+Folding@Home
+
+Folding@Home
+
+Teaching Assistant
+
+● Alex Chia
+○ CMU BS Computer Science (summa cum laude in 
+two years); Stanford MS Computer Science
+○ Google, Square Enix (Final Fantasy), Counsyl, 
+Teza Technologies (Algorithmic Trading)
+○ Winner of many programming competitions
+■ Microsoft Imagine Cup 2007 Worldwide 
+Top 6 (Algorithms)
+■ National Software Competition 2004 1st 
+Place (Singapore)
+■ National Olympiad for Informatics 2004 
+Gold (Singapore)
+
+Motivation
+This is the class we wish we'd had
+
+Motivation
+
+● Startups are huge...
+○ And Stanford is the epicenter of Silicon Valley (1, 2, 3, 4)
+○ But, surprisingly, you don't really learn how to start a 
+company at Stanford
+○ It's just something people around you do; skills transmitted 
+by osmosis and hard experience, not formally
+● We love academia, but...
+○ Academia teaches details of black boxes (balancing 
+red/black trees, hash functions), not how they fit together.
+○ Academia teaches how to solve problems, not what 
+problems are valuable to solve.
+○ First year grad students & fresh grads don't know how to 
+ship production code (editing, testing, dev/staging/prod)
+
+Motivation
+
+http://lalith.in/2012/06/07/academic-code-quality
+
+Motivation
+
+● Scaling a startup
+○ Once you achieve product-market fit, you start scaling the 
+company and hiring many new engineers
+○ New engineers weren't taught how to code in college, so the 
+first 3-6 months are spent training them...
+○ ...but as the employer you are also effectively paying their 
+student loans.
+● Scaling a research lab
+○ Similar problem, except with first year grad students
+○ Each CS grad student reinvents the wheel; no shared code
+○ More systematic onboarding =  more papers, more rapidly
+● Purpose of this class
+○ Go upstream, communicate some useful concepts upfront
+
+Who should take this course?
+
+● Course is ideal for
+○ STEM grad student who'd otherwise code for up to six 
+years w/o knowing software engineering
+○ Undergrad who knows how to balance a tree, not how to 
+deploy a website
+○ Interested in startups, want to learn from people who've 
+actually done and scaled them
+○ Broad understanding of startups, not just code
+● May be challenging
+○ Startups are hard: "there is no speed limit"
+○ Programming/project course; CS106B or equivalent req'd
+○ There will be a lot of Javascript related material
+○ No curve: in theory, everyone can get a grade of 100%
+
+Syllabus
+You can take the course for the technology, the 
+(highly applied) philosophy, or both.
+
+Stanford Bulletin
+
+Spiritual sequel to Peter Thiel's CS183 course on startups. Bridges the gap 
+between academic computer science and production software engineering. 
+Fast-paced introduction to key tools and techniques (command line, 
+dotfiles, text editor, distributed version control, debugging, testing, 
+documentation, reading code, deployments), featuring guest appearances 
+by senior engineers from successful startups and large-scale academic 
+projects. Over the course of the class, students will build a command line 
+application, expose it as a web service, and then link other students' 
+applications and services together to build an HTML5 mobile app. 
+General principles are illustrated through modern Javascript and the latest 
+web technologies, including Node, Backbone, Coffeescript, Bootstrap, 
+Git, and Github.
+
+Prerequisites: Basic computer science as per CS106B. Recommended: some familiarity 
+with HTML, CSS, and Javascript.
+
+Schedule: June 17 - Aug 25, 2013
+
+Week Week of
+
+Released
+
+Due (by 11:59pm PT)
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+June 17
+
+HW1
+
+June 24
+
+HW2
+
+July 1
+
+July 8
+
+HW3
+
+HW4
+
+July 15
+
+HW5
+
+July 22
+
+HW6
+
+July 29
+
+HW7 (short homework)
+
+Aug 5
+
+Final Project Leaderboard live
+
+Aug 12
+
+HW1
+
+HW2
+
+HW3
+
+HW4
+
+HW5
+
+HW6
+
+HW7
+
+10
+
+Aug 19
+
+FP winners declared on August 25, 
+2013 at 11:59pm Pacific Time
+
+Syllabus: Technical
+
+Week
+
+Technical Topics
+
+Assignment
+
+Start: Sign up for webservices, get server up, node/npm, basic JS
+
+HW1
+
+Dev Environment: Unix CLI, git, emacs, REPL, dotfiles, edit HTML
+
+HW2
+
+Product/Design: Market research, wireframing, design, CSS
+
+Mobile: HTTP, user agents, responsive design, Bootstrap
+
+Frontend JS: social and payment integration, frontend testing
+
+Backend JS: command line UI, DB, ORM, backend testing
+
+Full Stack JS I: Set up REST JSON API, client-side templating
+
+HW3
+
+HW4
+
+HW5
+
+HW6
+
+HW7
+
+Full Stack JS II: Consume APIs, widget as API client, data pipeline
+
+Final Project
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+Marketing: Video Editing, Analytics, CAC/LTV/Funnel
+
+10
+
+Summary and Recap
+
+Final Project
+
+Final Project
+
+Syllabus: Philosophical
+
+Week
+
+Philosophical Topics
+
+Related to...
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+Introduction: a startup is a business built to grow rapidly.
+
+Product
+
+Your market: The most important choice in a startup.
+
+Product/Copy
+
+Some basic principles of market research, design, and PR.
+
+Design
+
+Why do VCs love mobile/local/social? And what will they love next?
+
+Product
+
+Regulation, disruption, and the technologies of 2013.
+
+How to disrupt everything, including the government.
+
+Founding, conception, composition, and capitalization.
+
+Product
+
+Product
+
+Business
+
+Dev scaling: engineers vs. CPUs. DRY, docs, tests, code review.
+
+Business
+
+Business scaling: sales, marketing, the funnel, finance, accounting.
+
+Business
+
+10
+
+Summary and recap.
+
+Assignments
+
+● Homeworks (HWs): graded
+○ HW out/due on Wednesdays (HW1 out on June 19, 2013)
+○ Weekly multiple choice quizzes and simple programming 
+assignments (node.js, client-side JS)
+○ Objective answers, auto-grading
+● Final Project: partially graded
+○ Final project: Bitcoin Selfstarter with your idea
+○ You will build this up in steps over each week of the course
+○ What is graded
+■ grade.js takes your URL, return JSON w/ boolean flags 
+to evaluate technical details; see further slides for details
+○ What is not graded
+■ Qualitative content or video (i.e. product) is not graded
+■ Instead, ranked on basis of # BTC and other metrics
+
+Assignments: Due on Wednesdays
+All HW assignments will be auto-graded with objective answers
+ - Some multiple choice, some programming exercises
+ - Also grade technical aspects of final project (details)
+
+HW
+
+Release Date
+
+Due Date
+
+Notes
+
+HW1
+
+June 19
+
+June 26 at 11:59pm Pacific Time
+
+Easy to allow late start
+
+HW2
+
+June 26
+
+July 3 at 11:59pm Pacific Time
+
+HW3
+
+July 3
+
+July 10 at 11:59pm Pacific Time
+
+HW4
+
+July 10
+
+July 17 at 11:59pm Pacific Time
+
+HW5
+
+July 17
+
+July 24 at 11:59pm Pacific Time
+
+HW6
+
+July 24
+
+July 31 at 11:59pm Pacific Time
+
+HW7
+
+July 31
+
+Aug 7 at 11:59pm Pacific Time
+
+Short to allow project focus
+
+Final Project
+You will build your own simple Bitcoin-powered 
+crowdfunding site, featuring your own product.
+
+Final Project: Bitcoin Selfstarter
+
+● 100,000+ final projects present unique problems
+○ Rank/score automatically, yet allow creativity
+○ Enrich beginners, but challenge advanced students
+○ Complete within relatively short course period, but simulate 
+as much of startup founding process as possible
+● After much deliberation...
+○ Selfstarter is an open-source Kickstarter clone (1, 2, 3, 4)
+○ Allows non-dilutive crowdfunding via pre-orders of 
+product, as opposed to dilutive crowdfunding via equity sale
+○ Bitcoin is an open-source digital currency (1, 2, 3, 4)
+○ Allows anyone to set up a merchant account and accept 
+payments from anywhere in the world
+○ Final project = your node.js version of Selfstarter + social 
+sharing + Bitcoin + [your product]
+
+Final Project: Your Bitcoin Selfstarter
+
+The official selfstarter.us
+
+Your personal selfstarter
+
+Over the course of the class, we will 
+walk you through the steps required to  
+take the selfstarter concept...
+
+...and write your own simple selfstarter 
+clone in node.js, set up social sharing, 
+accept Bitcoin payments, and thereby 
+host your own custom crowdfunder.
+
+Final Project: Grading
+Graded Aspects of Final Project (Technical)
+Week
+
+Ungraded (Qualitative)
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+(no homework)
+
+10
+
+(no homework)
+
+Start: Hello world site successfully up at URL
+
+Name of your custom domain
+
+Dev Environment: Specified HTML tags present
+
+Quality of text and body copy
+
+Product/Design: Specified CSS rules present, 
+different product tiers listed
+
+Quality of design or product tiers
+
+Mobile: Site set up for mobile user agents (via 
+responsive design w/ Bootstrap)
+
+Visual artifacts on different 
+mobile clients
+
+Frontend JS: Social & payment buttons function
+
+Look and feel of integrations
+
+Backend JS: Code writes orders/shares to DB
+
+Quality of DB/ORM code
+
+Full Stack JS I: REST API returns proper JSON
+
+Quality of template code
+
+Full Stack JS II: Check client-side API calls
+
+Visual appearance of widgets
+
+Quality of video and pitch
+
+# of shares, # of BTC raised
+
+Final Project: Grading
+
+● Now you get it
+○ We can auto-grade the technical parts (e.g. via phantomjs)
+○ But your creativity shines through in the qualitative portions
+○ That is, you choose the product, the text, the video, the 
+design, and all the qualitative aspects in the selfstarter
+○ Crowdfunder success: idea + execution + design + sales
+● You're playing for bragging rights
+○ The final projects with the most social media shares and the 
+most Bitcoin raised via crowdfunding will get attention
+○ Bitcoin is particularly good for this because the pattern of 
+transfers to a given public address is world-readable
+○ For example, this open-source project accepts donations at 
+15qSxP1SQcUX3o4nhkfdbgyoWEFMomJ4rZ
+○ And we can see how much was transferred, and when!
+
+Final Project: Why Bitcoin?
+Example: see how much was transferred & when to
+15qSxP1SQcUX3o4nhkfdbgyoWEFMomJ4rZ
+
+For example, we can see 
+when the first donation 
+came in, in July 2011.
+
+Final Project: Leaderboard
+
+As the class progresses, we'll set up a final project leaderboard.
+- If you decide to list your project, you can rank it vs. others
+- Ranking will be done within each category, and also overall
+
+Rank URL
+
+Category Bitcoin 
+address
+
+# BTC raised
+
+# Tweets
+
+# FB shares
+
+1
+
+2
+
+example.
+com
+
+genomics
+
+example2.
+com
+
+law
+
+15qSxP1S
+QcUX3o4
+nhkfdbgy
+oWEFMo
+mJ4rW
+
+16GS6V8
+F4UUysQ
+T8nhbGr
+1qFtUUS
+qEUry8
+
+1000.0
+
+4000
+
+300
+
+970.3
+
+5000
+
+350
+
+...
+
+...
+
+...
+
+...
+
+...
+
+...
+
+Final Project: Comments
+
+● Some further comments...
+○ We'll review Bitcoin and how to obtain some later in the 
+class, but you can start with Bitcoin wiki and Local Bitcoins.
+○ Note: buying Bitcoin is not needed to pass the course!
+○ The final project is meant to be hard to game; after all, 
+"gaming" the process of getting a lot of money to your 
+Bitcoin address is a lot like running a profitable company. 
+○ For those who don't want to do a real money crowdfunder, 
+you can maximize the number of FB/Twitter social shares.
+○ We'll do some basic anti-gaming checks, but ultimately 
+you're mostly playing for bragging rights. 
+○ That said, the very top projects will attract attention from 
+the Valley, including prizes sponsored by startups.
+
+Final Project: Prizes
+● Prize Categories
+○ We will have prizes in at least four categories: genomics, 
+law, transportation, and Bitcoin - sponsored respectively by 
+Counsyl, Judicata, Leap Transit, and Coinbase.
+○ Depending on which startup categories are popular in 
+Survey 1: Background and Interests we will likely add more
+○ You choose your category when you enter the leaderboard, 
+which will go live later in the class
+● Bragging rights only
+○ In this first offering of the class we will not be awarding any 
+real money (there are strange rules around prizes in many 
+jurisdictions).
+○ However, first place in any competition always confers 
+bragging rights!
+
+Final Project: Prizes
+● Rank-ordering
+○ In each category, projects are ordered by two metrics
+■ total BTC crowdfunded
+■ total # of public social media shares on Twitter. 
+○ Twitter is better than FB for this purpose as tweets are 
+default public and more checkable.
+○ Founders and engineers from the sponsoring startups will 
+take a close look at the top entries in their category, but 
+ranking/judging will be wholly programmatic as above
+● Leaderboard
+○ To be counted as a “winner” you need to put your 
+information into the public leaderboard (like the URL of 
+your internet-accessible project, your public Bitcoin address, 
+and so on). Leaderboard will be accessible mid-class.
+
+Final Project: Prizes
+● Winning
+○ On the last day (Aug. 25, 2013 at 11:59pm PT), the 
+leaderboard will be frozen and winners will be announced. 
+○ In each category the top 10 projects by # of BTC 
+crowdfunded and by # of tweets will be emailed out.
+○ There will also be a grand prize winner with the most BTC 
+crowdfunded, and another with the most Twitter shares.
+○ Note again: you do not need to participate in the public 
+leaderboard competition to get a 100% grade in the class! 
+You can keep your final project private and simply learn 
+web programming.
+○ You also do not need to use Bitcoin to compete in the 
+public competition. You can instead compete solely on the 
+basis of the # of social media shares for your crowdfunder.
+
+Final Project: Teams
+
+● What about teams?
+○ Please submit the graded portions of each final project as 
+individuals
+○ That is, even if three people are working on the same 
+product as a team, submit three individual URLs for grading 
+(this will be obvious as you do the homeworks) with 
+independent implementations
+○ Then when it comes time to promote the project, focus on 
+promoting only one of those URLs
+○ For all non-final project individual assignments (multiple 
+choice quizzes and programming), it goes without saying - 
+submit your answers as individuals.
+○ Teams are the most experimental part of the class. We'll see 
+how well this goes.
+
+Community and Collaboration
+Guest Lecturers, Forums/Meetups/Hackathons, 
+and Collaboration Policy
+
+Guest Lecturers
+
+Our guests include many of the top startups & big companies 
+in Silicon Valley. We'll upload lectures as the course progresses!
+
+Forum, Meetups, and Hackathons
+● Forums
+○ Please use the discussion forums if you have questions
+○ There are ~100,000 students, so email doesn't scale
+○ We'll monitor them closely
+● Meetups and Hackathons
+○ Read this forum thread to find class meetups in your city.
+○ Create a thread with your city if it doesn't exist; for example 
+here is the New York forum thread and meetup.
+○ If you live in a very remote area, use this thread and set up 
+Google Hangouts with fellow classmates
+○ Take pictures of meetups and link them from the forum!
+○ Organize meetups to go over course material. 
+○ Organize hackathons to code on the final project (or 
+whatever you want)
+
+Summary
+Let's review.
+
+Summary
+
+● What the class covers
+○ Everything we wish we'd known when starting a co/lab
+○ Lots of JS and web programming
+○ Final project: build your own Bitcoin-powered crowdfunder
+ over the quarter, then use it to market your own product.
+● Here's what to do next
+○ Bookmark the class website and forum
+○ Do the background reading and look at crowdfunding, 
+selfstarter, and Bitcoin
+○ Share the signup page on FB/Twitter/G+ if you have 
+friends who might be interested
+○ Then go here to continue with Week 1 lectures
+○ Homework 1 will be out on Wed. June 19, due on June 26
+
+

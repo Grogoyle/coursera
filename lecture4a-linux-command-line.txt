@@ -1,0 +1,811 @@
+Startup Engineering
+Bala ji S. Srinivasan
+Stanford University
+
+Class: class.coursera.org/startup-001
+Signup: coursera.org/course/startup
+Forums: bit.ly/startup-eng-forum
+
+The Linux Command Line
+In this lecture we’ll introduce you to a large number of new command line tools and show you
+how to connect them together via pipes.
+
+The Command Line
+In general, the best way to understand the command line is to learn by doing. We’ll go through
+a number of useful commands with examples, and you should become reasonably skilled in
+the process, but it is nevertheless worth looking at a few books to consult as references. Here
+are some particularly good ones:
+
+• The Command Line Crash Course is Zed Shaw’s free online tutorial introduction to the
+command line. Much shorter than the others listed here and recommended.
+
+• Sobell’s Linux Book: If you only get one book, get Sobell’s. It is probably the single
+best overview, and much of the content is applicable to both Linux and OS X1 systems.
+
+• Unix Power Tools: While this came out in 2002, much of it is still relevant to the present
+day. New options have been added to commands but old ones are very rarely deprecated.
+
+• Unix/Linux Sysadmin Handbook: Somewhat diﬀerent focus than Sobell. Organized by
+purpose (e.g. shutdown), and a good starter guide for anyone who needs to administer
+machines. Will be handy if you want to do anything nontrivial with EC2.
+
+With those as references, let’s dive right in. As always, the commands below should be
+executed after ssh’ing into your EC2 virtual machine1 . If your machine is messed up for some
+reason, feel free to terminate the instance in the AWS EC2 Dashboard and boot up a new
+one. Right now we are doing all these commands in a “vanilla” environment without much in
+the way of user conﬁguration; as we progress we will set up quite a lot.
+
+The three streams: STDIN, STDOUT, STDERR
+Most bash commands accept input as a single stream of bytes called STDIN or standard input
+and yields two output streams of bytes: STDOUT, which is the standard output, and STDERR
+which is the stream for errors.
+
+• STDIN: this can be text or binary data streaming into the program, or keyboard input.
+• STDOUT: this is the stream where the program writes its data. This is printed to the
+screen unless otherwise speciﬁed.
+
+1You can probably get away with running them on your local Mac, but beware: the built-in command line
+tools on OS X (like mv) are very old BSD versions. You want to install the new GNU tools using homebrew
+Then your local Mac environment will be very similar to your remote EC2 environment.
+
+1
+
+Figure 1: Visualizing the three standard streams. From Wikipedia.
+
+• STDERR: this is the stream where error messages are display. This is also printed to the
+screen unless otherwise speciﬁed.
+
+Here are a few simple examples; execute these at your EC2 command line.
+
+1 # Redirecting STDOUT with >
+2 echo -e "line1\nline2"
+3 echo -e "line1\nline2" > demo.txt
+4
+5 # Redirecting STDERR with 2>
+6 curl fakeurl # print error message to screen
+7 curl fakeurl 2> errs.txt
+8 cat errs.txt
+9
+10 # Redirecting both STDIN and STDOUT to different files with 1> and 2>
+11 curl google.com fakeurl 1> out1.txt 2> out2.txt
+12
+13 # Redirecting both to the same file with &>
+14 curl google.com fakeurl &> out.txt
+15
+16 # Getting STDIN from a pipe
+17 cat errs.txt | head
+18
+19 # Putting it all together
+20 curl -s http://google.com | head -n 2 &> asdf.txt
+
+Note what we did in the last two examples, with the | symbol. That’s called a pipe,
+and the technique of connecting one command’s STDOUT to another command’s STDIN is
+very powerful. It allows us to build up short-but-powerful programs by composing individual
+pieces. If you can write something this way, especially for text processing or data analysis,
+you almost always should...even if it’s a complex ten step pipeline. The reason is that it will
+be incredibly fast and robust, due to the fact that the underlying GNU tools are written in C
+
+2
+
+and have received countless hours of optimization and bug ﬁxes. It will also not be that hard
+to understand: it’s still a one-liner, albeit a long one. See this piece on Taco Bell programming
+and commentary. As a corollary, you should design your own programs to work in command
+line pipelines (we’ll see how to do this as the course progresses). With these principles in
+mind, let’s go through some interactive examples of Unix commands. All of these should
+work on your default Ubuntu EC2 box.
+
+Navigation and Filesystem
+
+list ﬁles: ls
+The most basic and heavily used command. You will use this constantly to get your bearings
+and conﬁrm what things do.
+
+1 ls
+2 ls --help
+3 ls --help | less # ’pipe’ the output of ls into less
+4 ls -a
+5 ls -alrth
+6 alias ll=’ls -alrth’ # create an alias in bash
+7 ll
+
+modify/create empty ﬁles: touch
+Used to change timestamps and quickly create zero byte ﬁles as placeholders. Useful for
+various kinds of tests.
+
+1 touch file1
+2 touch file2
+3 ll
+4 ll --full-time
+5 touch file1
+6 ll --full-time # note that the file1 modification time is updated
+
+display text: echo
+Useful for debugging and creating small ﬁles for tests.
+
+1 echo "foo"
+2 man echo
+3 echo -e "foo\n"
+4 echo -e "line1\nline2" > demo.txt # write directly to tempfile with ’>’
+
+copy ﬁles: cp
+Powerful command with many options, works on everything from single ﬁles to entire archival
+backups of huge directories.
+
+3
+
+1 cp --help
+2 cp demo.txt demo2.txt
+3 cp -v demo.txt demo3.txt # verbose copy
+4 cp -a demo.txt demo-archive.txt # archival exact copy
+5 ll --full-time demo* # note timestamps of demo/demo-archive
+6 echo "a new file" > asdf.txt
+7 cat demo.txt
+8 cp asdf.txt demo.txt
+9 cat demo.txt # cp just clobbered the file
+10 alias cp=’cp -i’ # set cp to be interactive by default
+
+move/rename ﬁles: mv
+Move or rename ﬁles. Also extremely powerful.
+
+1 mv asdf.txt asdf-new.txt
+2 mv -i asdf-new.txt demo.txt # prompt before clobbering
+3 alias mv=’mv -i’
+
+remove ﬁles: rm
+Powerful command that can be used to delete individual ﬁles or recursively delete entire trees.
+Use with caution.
+
+1 rm demo.txt
+2 rm -i demo2.txt
+3 rm -i demo*txt
+4 alias rm=’rm -i’
+5 alias # print all aliases
+
+symbolic link: ln
+Very useful command that allows a ﬁle to be symbolically linked, and therefore in two places
+at once. Extremely useful for large ﬁles, or for putting in one level of indirection.
+
+1 yes | nl | head -1000 > data1.txt
+2 head data1.txt
+3 ll data1.txt
+4 ln -s data1.txt latest.txt
+5 head latest.txt
+6 ll latest.txt # note the arrow. A symbolic link is a pointer.
+7 yes | nl | head -2000 | tail -50 > data2.txt
+8 head latest.txt
+9 ln -sf data2.txt latest.txt # update the pointer w/o changing the underlying file
+10 head latest.txt
+
+4
+
+11 head data1.txt
+12 head data2.txt
+
+print working directory: pwd
+Simple command to print current working directory. Used for orientation when you get lost.
+
+1 pwd
+
+create directories: mkdir
+Create directories. Has a few useful options.
+
+1 mkdir dir1
+2 mkdir dir2/subdir
+# error
+3 mkdir -p dir2/subdir # ok
+
+change current directory: cd
+Change directories. Along with ls, one of the most frequent commands.
+
+1 cd ~
+2 cd dir1
+3 pwd
+4 cd ..
+5 cd dir2/subdir
+6 pwd
+7 cd - # jump back
+8 cd - # and forth
+9 cd
+# home
+10 alias ..=’cd ..’
+11 alias ...=’cd ..; cd ..’
+12 cd dir2/subdir
+13 ...
+14 pwd
+
+remove directories: rmdir
+Not used that frequently; usually recursive rm is used instead. Note that rm -rf is the most
+dangerous command in Unix and must be used with extreme caution, as it means “remove
+recursively without prompting” and can easily nuke huge amounts of data.
+
+1 rmdir dir1
+2 rmdir dir2 # error
+3 rm -rf dir2 # works
+
+5
+
+Downloading and Syncing
+
+synchronize local and remote ﬁles: rsync
+Transfer ﬁles between two machines. Assuming you have set up your ~/.ssh/config as in
+previous lectures, run this command on your local machine, making the appropriate substitu-
+tions:
+
+1 # Run on local machine
+2 $ yes | nl | head -500 > something.txt
+3 $ rsync -avp something.txt awshost4:~/
+4 building file list ... done
+5 something.txt
+6
+7 sent 4632 bytes
+received 42 bytes 1869.60 bytes/sec
+8 total size is 4500 speedup is 0.96
+9 $ rsync -avp something.txt awshost4:~/
+10 building file list ... done
+11
+12 sent 86 bytes received 20 bytes 42.40 bytes/sec
+13 total size is 4500 speedup is 42.45
+
+Notice that the ﬁrst rsync invocation sent 4632 bytes but the second time sent much less
+data 86 bytes. That is because rsync can resume transfers, which is essential for working
+with large ﬁles and makes it generally preferable to scp. As an exercise, ssh in and run cat
+something.txt on the EC2 machine to see that it was uploaded.
+
+retrieve ﬁles via http/https/ftp: wget
+Very useful command to rapidly pull down ﬁles or webpages. Note: the distinction between
+wget and rsync is that the wget is generally used for publicly accessible ﬁles (accessible via a
+web browser, perhaps behind a login) while rsync is used for private ﬁles (usually accessible
+only via ssh).
+
+1 wget http://startup-class.s3.amazonaws.com/simple.sh
+2 less simple.sh # hit q to quit
+3
+4 # pull a single HTML page
+5 wget https://github.com/joyent/node/wiki/modules
+6 less modules
+7
+8 # recursively download an entire site, waiting 2 seconds between hits.
+9 wget -w 2 -r -np -k -p http://www.stanford.edu/class/cs106b
+
+interact with single URLs: curl
+A bit diﬀerent from wget, but has some overlap in functionality. curl is for interacting with
+single URLs. It doesn’t have the spidering/recursive properties that wget has, but it supports
+
+6
+
+a much wider array of protocols. It is very commonly used as the building block for API calls.
+
+1 curl https://install.meteor.com | less # an example install file
+2 curl -i https://api.github.com/users/defunkt/orgs # a simple API call
+3 GHUSER="defunkt"
+4 GHVAR="orgs"
+5 curl -i https://api.github.com/users/$GHUSER/$GHVAR # with variables
+6 GHVAR="repos"
+7 curl -i https://api.github.com/users/$GHUSER/$GHVAR # with diff vars
+
+send test packets: ping
+See if a remote host is up. Very useful for basic health checks or to see if your computer is
+online. Has a surprisingly large number of options.
+
+1 ping google.com # see if you have internet connectivity
+2 ping stanford.edu # see if stanford is up
+
+Basic Text Processing
+
+view ﬁles: less
+Paging utility used to view large ﬁles. Can scroll both up and down. Use q to quit.
+
+1 rsync --help | less
+
+print/concatenate ﬁles: cat
+Industrial strength ﬁle viewer. Use this rather than MS Word for looking at large ﬁles, or ﬁles
+with weird bytes.
+
+1 # Basics
+2 echo -e "line1\nline2" > demo.txt
+3 cat demo.txt
+4 cat demo.txt demo.txt demo.txt > demo2.txt
+5 cat demo2.txt
+6
+7 # Piping
+8 yes | head | cat - demo2.txt
+9 yes | head | cat demo2.txt -
+10
+11 # Download chromosome 22 of the human genome
+12 wget ftp://ftp.ncbi.nih.gov/genomes/Homo_sapiens/CHR_22/hs_ref_GRCh37.p10_chr22.gbk.gz
+13 gunzip hs_ref_GRCh37.p10_chr22.gbk.gz
+14 less hs_ref_GRCh37.p10_chr22.gbk
+15 cat hs_ref_GRCh37.p10_chr22.gbk # hit control-c to interrupt
+
+7
+
+ﬁrst part of ﬁles: head
+Look at the ﬁrst few lines of a ﬁle (10 by default). Surprisingly useful for debugging and
+inspecting ﬁles.
+
+1 head --help
+2 head *gbk
+# first 10 lines
+3 head -50 *gbk
+# first 50 lines
+4 head -n50 *gbk # equivalent
+5 head *txt *gbk # heads of multiple files
+6 head -q *txt *gbk # heads of multiple files w/o delimiters
+7 head -c50 *gbk # first 50 characters
+
+last part of ﬁles: tail
+Look at the bottom of ﬁles; default is last 10 lines. Useful for following logs, debugging, and
+in combination with head to pull out subsets of ﬁles.
+
+1 tail --help
+2 tail *gbk
+3 head *gbk
+4 tail -n+3 *gbk | head # start at third line
+5 head -n 1000 *gbk | tail -n 20 # pull out intermediate section
+6 # run process in background and follow end of file
+7 yes | nl | head -n 10000000 > foo &
+8 tail -F foo
+
+extract columns: cut
+Pull out columns of a ﬁle. In combination with head/tail, can pull out arbitrary rectangular
+subsets of a ﬁle. Extremely useful for working with any kind of tabular data (such as data
+headed for a database).
+
+1 wget ftp://ftp.ncbi.nih.gov/genomes/Bacteria/\
+2 Escherichia_coli_K_12_substr__W3110_uid161931/NC_007779.ptt
+3 head *ptt
+4 cut -f2 *ptt | head
+5 cut -f2,5 *ptt | head
+6 cut -f2,5 *ptt | head -30
+7 cut -f1 *ptt | cut -f1 -d’.’ | head
+8 cut -c1-20 *ptt | head
+
+numbering lines: nl
+Number lines. Useful for debugging and creating quick datasets. Has many options for
+formatting as well.
+
+8
+
+1 nl *gbk | tail -1 # determine number of lines in file
+2 nl *ptt | tail -2
+
+concatenate columns: paste
+Paste together data by columns.
+
+1 tail -n+3 *ptt | cut -f1 > locs
+2 tail -n+3 *ptt | cut -f5 > genes
+3 paste genes locs genes | head
+
+sort by lines: sort
+Industrial strength sorting command. Very powerful standalone and in combination with
+others.
+
+1 sort genes | less
+# default sort
+2 sort -r genes | less # reverse
+3 sort -R genes | less # randomize
+4 cut -f2 *ptt | tail -n+4 | head
+
+uniquify lines: uniq
+Useful command for analyzing any data with repeated elements. Best used in pipelines with
+sort beforehand.
+
+1 cut -f2 *ptt | tail -n+4 | sort | uniq -c | sort -k1 -rn #
+2 cut -f3 *ptt | tail -n+4 | uniq -c | sort -k2 -rn # output number
+3 cut -f9 *ptt > products
+4 sort products | uniq -d
+
+line, word, character count: wc
+Determine ﬁle sizes. Useful for debugging and conﬁrmation, faster than nl if no intermediate
+information is needed.
+
+1 wc *ptt
+# lines, words, bytes
+2 wc -l *ptt # only number of lines
+3 wc -L *ptt # longest line length, useful for apps like style checking
+
+9
+
+split large ﬁles: split
+Split large ﬁle into pieces. Useful as initial step before many parallel computing jobs.
+
+1 split -d -l 1000 *ptt subset.ptt.
+2 ll subset.ptt*
+
+Help
+
+manuals: man
+Single page manual ﬁles. Fairly useful once you know the basics. But Google or StackOverﬂow
+are often more helpful these days if you are really stuck.
+
+1 man bash
+2 man ls
+3 man man
+
+info: info
+A bit more detail than man, for some applications.
+
+1 info cut
+2 info info
+
+System and Program information
+
+computer information: uname
+Quick diagnostics. Useful for install scripts.
+
+1 uname -a
+
+current computer name: hostname
+Determine name of current machine. Useful for parallel computing, install scripts, conﬁg ﬁles.
+
+1 hostname
+
+current user: whoami
+Show current user. Useful when using many diﬀerent machines and for install scripts.
+
+1 whoami
+
+10
+
+current processes: ps
+List current processes. Usually a prelude to killing a process.
+
+1 sleep 60 &
+2 ps xw | grep sleep
+3 # kill the process number
+
+Here is how that looks in a session:
+
+1 ubuntu@domU-12-31-39-16-1C-96:~$ sleep 20 &
+2 [1] 5483
+3 ubuntu@domU-12-31-39-16-1C-96:~$ ps xw | grep sleep
+0:00 sleep 20
+S
+5483 pts/0
+4
+5485 pts/0
+S+
+0:00 grep --color=auto sleep
+5
+6 ubuntu@domU-12-31-39-16-1C-96:~$ kill 5483
+7 [1]+
+Terminated
+sleep 20
+
+So you see that the process number 5483 was identiﬁed by printing the list of running
+processes with ps xw, ﬁnding the process ID for sleep 20 via grep, and then running kill
+5483. Note that the grep command itself showed up; that is a common occurrence and can
+be dealt with as follows:
+
+1 ubuntu@domU-12-31-39-16-1C-96:~$ sleep 20 &
+2 [1] 5486
+3 ubuntu@domU-12-31-39-16-1C-96:~$ ps xw | grep sleep | grep -v "grep"
+5486 pts/0
+S
+0:00 sleep 20
+4
+5 ubuntu@domU-12-31-39-16-1C-96:~$ kill 5486
+
+Here, we used the grep -v ﬂag to exclude any lines that contained the string grep. That
+will have some false positives (e.g. it will exclude a process named foogrep, so use this with
+some caution.
+
+most important processes: top
+Dashboard that shows which processes are doing what. Use q to quit.
+
+1 top
+
+stop a process: kill
+Send a signal to a process. Usually this is used to terminate misbehaving processes that won’t
+stop of their own accord.
+
+11
+
+1 sleep 60 &
+2 # The following invocation uses backticks to kill the process we just
+3 # started. Copy/paste it into a separate text file if you can’t distinguish the
+4 # backticks from the standard quote.
+5 kill ‘ps xw | grep sleep | cut -f1 -d ’ ’ | head -1‘
+
+Superuser
+
+become root temporarily: sudo
+Act as the root user for just one or a few commands.
+
+1 sudo apt-get install -y git-core
+
+become root: su
+Actually become the root user. Sometimes you do this when it’s too much of a pain to type
+sudo a lot, but you usually don’t want to do this.
+
+1 touch normal
+2 sudo su
+3 touch rootfile
+4 ls -alrth normal rootfile # notice owner of rootfile
+
+Storage and Finding
+
+create an archive: tar
+Make an archive of ﬁles.
+
+1 mkdir genome
+2 mv *ptt* genome/
+3 tar -cvf genome.tar genome
+
+compress ﬁles: gzip
+Compress ﬁles. Can also view compressed gzip ﬁles without fully uncompressing them with
+zcat.
+
+1 gzip genome.tar
+2 md temp
+3 cp genome.tar.gz temp
+4 cd temp
+5 tar -xzvf genome.tar.gz
+6 cd ..
+
+12
+
+7 gunzip genome.tar.gz
+8 rm -rf genome.tar genome temp
+9 wget ftp://ftp.ncbi.nih.gov/genomes/Homo_sapiens/CHR_22/hs_ref_GRCh37.p10_chr22.fa.gz
+10 zcat hs_ref_GRCh37.p10_chr22.fa.gz | nl | head -1000 | tail -20
+
+ﬁnd a ﬁle (non-indexed): find
+Non-indexed search. Can be useful for iterating over all ﬁles in a subdirectory.
+
+1 find /etc | nl
+
+ﬁnd a ﬁle (indexed): locate
+For locate to work, updatedb must be operational. This runs by default on Ubuntu but you
+need to manually conﬁgure it for a mac.
+
+1 sudo apt-get install -y locate
+2 sudo updatedb # takes a little bit of time
+3 locate fstab
+
+system disk space: df
+Very useful when working with large data sets.
+
+1 df -Th
+
+directory utilization: du
+Use to determine which subdirectories are taking up a lot of disk space.
+
+1 cd ~ubuntu
+2 du --max-depth=1 -b | sort -k1 -rn
+
+Intermediate Text Processing
+
+searching within ﬁles: grep
+Powerful command which is worth learning in great detail. Go through grep --help and try
+out many more of the options.
+
+1 wget ftp://ftp.ncbi.nih.gov/genomes/Bacteria/\
+2 Escherichia_coli_K_12_substr__W3110_uid161931/NC_007779.ptt
+3 grep protein *ptt | wc -l # lines containing protein
+4 grep -l Metazoa *ptt *gbk # print filenames which contain ’Metazoa’
+5 grep -B 5 -A 5 Metazoa *gbk
+6 grep ’JOURNAL.*’ *gbk | sort | uniq
+
+13
+
+simple substitution: sed
+Quick ﬁnd/replace within a ﬁle. You should review this outstanding set of useful sed one-
+liners. Here is a simple example of using sed to replace all instances of kinase with STANFORD
+in the ﬁrst 10 lines of a ptt ﬁle, printing the results to STDOUT:
+
+1 head *ptt | sed ’s/kinase/STANFORD/g’
+
+sed is also useful for quick cleanups of ﬁles. Suppose you have a ﬁle which was saved on
+Windows:
+
+1 # Convert windows newlines into unix; use if you have such a file
+2 wget http://startup-class.s3.amazonaws.com/windows-newline-file.csv
+
+Viewing this ﬁle in less shows us some ^M characters, which are Windows-format newlines
+(\r), diﬀerent from Unix newlines (\n).
+
+1 $ less windows-newline-file.csv
+2 30,johnny@gmail.com,Johnny Walker,,^M1456,jim@gmail.com,Jim Beam,,^M2076,...
+3 windows-newline-file.csv (END)
+
+The \r is interpreted in Unix as a “carriage return”, so you can’t just cat these ﬁles. If
+you do, then the cursor moves back to the beginning of the line everytime it hits a \r, which
+means you don’t see much. Try it out:
+
+1 cat windows-newline-file.csv
+
+You won’t see anything except perhaps a blur. To understand what is going on in more
+detail, read this post and this one. We can ﬁx this issue with sed as follows:
+
+1 ubuntu@domU-12-31-39-16-1C-96:~$ sed ’s/\r/\n/g’ windows-newline-file.csv
+2 30,johnny@gmail.com,Johnny Walker,,
+3 1456,jim@gmail.com,Jim Beam,,
+4 2076,jack@stanford.edu,Jack Daniels,,
+
+Here s/\r/\n/g means “replace the \r with \n globally” in the ﬁle. Without the trailing
+g the sed command would just replace the ﬁrst match. Note that by default sed just writes
+its output to STDOUT and does not modify the underlying ﬁle; if we actually want to modify
+the ﬁle in place, we would do this instead:
+
+1 sed -i ’s/\r/\n/g’ windows-newline-file.csv
+
+Note the -i ﬂag for in-place replacement. Again, it is worth reviewing this list of useful
+sed one-liners.
+
+14
+
+advanced substitution/short scripts: awk
+Useful scripting language for working with tab-delimited text. Very fast for such purposes,
+intermediate size tool.
+
+1 tail -n+4 *ptt | awk -F"\t" ’{print $2, $3, $3 + 5}’ | head
+
+To get a feel for awk, review this list of useful awk one liners. It is often the fastest way
+to operate on tab-delimted data before importation into a database.
+
+Intermediate bash
+Keyboard shortcuts
+Given how much time you will spend using bash, it’s important to learn all the keyboard
+shortcuts.
+
+• Ctrl + A: Go to the beginning of the line you are currently typing on
+• Ctrl + E : Go to the end of the line you are currently typing on
+• Ctrl + F : Forward one character.
+• Ctrl + B : Backward one character.
+• Meta + F : Move cursor forward one word on the current line
+• Meta + B : Move cursor backward one word on the current line
+• Ctrl + P : Previous command entered in history
+• Ctrl + N : Next command entered in history
+• Ctrl + L: Clears the screen, similar to the clear command
+• Ctrl + U : Clears the line before the cursor position. If you are at the end of the line,
+clears the entire line.
+
+• Ctrl + H : Same as backspace
+• Ctrl + R : Lets you search through previously used commands
+• Ctrl + C : Kill whatever you are running
+• Ctrl + D : Exit the current shell
+• Ctrl + Z : Puts whatever you are running into a suspended background process. fg
+restores it.
+
+• Ctrl + W : Delete the word before the cursor
+• Ctrl + K : Kill the line after the cursor
+• Ctrl + Y : Yank from the kill ring
+
+15
+
+• Ctrl + _: Undo the last bash action (e.g. a yank or kill)
+• Ctrl + T : Swap the last two characters before the cursor
+• Meta + T : Swap the last two words before the cursor
+• Tab : Auto-complete ﬁles and folder names
+Let’s go through a brief screencast of the most important shortcuts.
+
+Backticks
+Sometimes you want to use the results of a bash command as input to another command, but
+not via STDIN. In this case you can use backticks:
+
+1 echo ‘hostname‘
+2 echo "The date is "‘date‘
+
+This is a useful technique to compose command line invocations when the results of one
+is the argument for another. For example, one command might return a hostname like
+ec2-50-17-88-215.compute-1.amazonaws.com which can then be passed in as the -h ar-
+gument for another command via backticks.
+
+Running processes in the background: foo &
+Sometimes we have a long running process, and we want to execute other commands while it
+completes. We can put processes into the background with the ampersand symbol as follows.
+
+1 sleep 50 &
+2 # do other things
+
+Here is how that actually looks at the command line:
+
+1 ubuntu@domU-12-31-39-16-1C-96:~$ sleep 60 &
+2 [1] 5472
+3 ubuntu@domU-12-31-39-16-1C-96:~$ head -2 *ptt
+4 Escherichia coli str. K-12 substr. W3110, complete genome - 1..4646332
+5 4217 proteins
+6 ubuntu@domU-12-31-39-16-1C-96:~$ ps xw | grep 5472
+5472 pts/0
+S
+0:00 sleep 60
+7
+5475 pts/0
+S+
+0:00 grep --color=auto 5472
+8
+9 ubuntu@domU-12-31-39-16-1C-96:~$
+10 ubuntu@domU-12-31-39-16-1C-96:~$
+11 [1]+
+Done
+sleep 60
+
+Note that we see [1] 5472 appear. That means there is one background process currently
+running ([1]) and that the ID of the background process we just spawned is 5472. Note also
+at the end that when the process is done, this line appears:
+
+16
+
+1 [1]+
+
+Done
+
+sleep 60
+
+That indicates which process is done. For completeness, here is what it would look like if
+you had multiple background processes running simultaneously, and then waited for them all
+to end.
+
+1 ubuntu@domU-12-31-39-16-1C-96:~$ sleep 10 &
+2 [1] 5479
+3 ubuntu@domU-12-31-39-16-1C-96:~$ sleep 20 &
+4 [2] 5480
+5 ubuntu@domU-12-31-39-16-1C-96:~$ sleep 30 &
+6 [3] 5481
+7 ubuntu@domU-12-31-39-16-1C-96:~$
+sleep 10
+Done
+8 [1]
+sleep 20
+Done
+9 [2]-
+10 [3]+
+Done
+sleep 30
+
+Execute commands from STDIN: xargs
+This is a very powerful command but a bit confusing. It allows you to programmatically build
+up command lines, and can be useful for spawning parallel processes. It is commonly used in
+combination with the find or ls commands. Here is an example which lists all ﬁles under
+/etc ending in .sh, and then invokes head -2 on each of them.
+
+1 find /etc -name ’*\.sh’
+
+| xargs head -2
+
+Here is another example which invokes the file command on everything in /etc/profile.d,
+to print the ﬁle type:
+
+1 ls /etc/profile.d | xargs file
+
+A savvy reader will ask why one couldn’t just do this:
+
+1 file /etc/profile.d/*
+
+Indeed, that will produce the same results in this case, and is feasible because only one
+directory is being listed. However, if there are a huge number of ﬁles in the directory, then
+bash will be unable to expand the *. This is common in many large-scale applications in
+search, social, genomics, etc and will give the dreaded Argument list too long error. In
+this case xargs is the perfect tool; see here for more.
+
+17
+
+Pipe and redirect: tee
+Enables you to save intermediate stages in a pipeline. Here’s an example:
+
+1 ls | tee list.txt
+
+The reason it is called tee is that it is like a “T-junction”, where it passes the data through
+while also serializing it to a ﬁle. It can be useful for backing up a ﬁle while simultaneously
+modifying it; see some examples.
+
+time any command: time
+This is a bash built in useful for benchmarking commands.
+
+1 time sleep 5
+
+That should echo the fact that the command took (almost) exactly 5 seconds to complete.
+It is also useful to know about a more sophisticated GNU time command, which can output
+a ton of useful information, including maximum memory consumption; extremely useful to
+know before putting a job on a large compute cluster. You can invoke it with /usr/bin/time;
+see documentation for Ubuntu 12 LTS here.
+
+Summary
+We covered quite a few command line programs here, but nothing substitutes for running
+them on your own and looking at the online help and ﬂags. For example, with head you can
+do head --help, man head, and info head to get more information.
+
+18
+
+
